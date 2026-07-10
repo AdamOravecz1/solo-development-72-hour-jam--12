@@ -1,0 +1,23 @@
+[gd_scene format=3 uid="uid://bkb8qqjyt00dy"]
+
+[ext_resource type="Texture2D" uid="uid://bpfms27mfo7pp" path="res://Sprite/Peasant.png" id="1_v0iea"]
+[ext_resource type="Script" uid="uid://boys5150sik0s" path="res://Scenes/player.gd" id="2_cvnsp"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_cvnsp"]
+atlas = ExtResource("1_v0iea")
+region = Rect2(0, 0, 32, 32)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_6t5aa"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_cvnsp")
+}],
+"loop": true,
+"name": &"default",
+"speed": 5.0
+}]
+
+[node name="Player" type="AnimatedSprite2D" unique_id=928320247]
+sprite_frames = SubResource("SpriteFrames_6t5aa")
+script = ExtResource("2_cvnsp")

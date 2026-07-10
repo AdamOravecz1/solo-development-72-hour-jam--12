@@ -1,0 +1,29 @@
+[gd_scene format=3 uid="uid://dqch2jg520aac"]
+
+[ext_resource type="Script" uid="uid://dgdajx6ccf6sa" path="res://Scenes/level_1.gd" id="1_8ffim"]
+[ext_resource type="Texture2D" uid="uid://dgjewxhd1o8b6" path="res://Sprite/Tile.png" id="1_vk57k"]
+[ext_resource type="PackedScene" uid="uid://bkb8qqjyt00dy" path="res://Scenes/player.tscn" id="3_xfk5q"]
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_8ffim"]
+texture = ExtResource("1_vk57k")
+texture_region_size = Vector2i(32, 32)
+0:0/0 = 0
+1:0/0 = 0
+0:1/0 = 0
+1:1/0 = 0
+
+[sub_resource type="TileSet" id="TileSet_xfk5q"]
+tile_size = Vector2i(32, 32)
+sources/0 = SubResource("TileSetAtlasSource_8ffim")
+
+[node name="Level1" type="Node2D" unique_id=968751266]
+script = ExtResource("1_8ffim")
+
+[node name="ButtomLayer" type="TileMapLayer" parent="." unique_id=1417879061]
+tile_set = SubResource("TileSet_xfk5q")
+
+[node name="TopLayer" type="TileMapLayer" parent="." unique_id=1954708605]
+
+[node name="Camera2D" type="Camera2D" parent="." unique_id=178686319]
+
+[node name="Player" parent="." unique_id=928320247 instance=ExtResource("3_xfk5q")]
