@@ -3,6 +3,8 @@
 [ext_resource type="Script" uid="uid://dgdajx6ccf6sa" path="res://Scenes/level_1.gd" id="1_8ffim"]
 [ext_resource type="Texture2D" uid="uid://dgjewxhd1o8b6" path="res://Sprite/Tile.png" id="1_vk57k"]
 [ext_resource type="PackedScene" uid="uid://bkb8qqjyt00dy" path="res://Scenes/player.tscn" id="3_xfk5q"]
+[ext_resource type="PackedScene" uid="uid://du4kkj5qdtiyy" path="res://Scenes/hunter.tscn" id="4_6444e"]
+[ext_resource type="PackedScene" uid="uid://b6ubgj5cmvsxa" path="res://Scenes/ork.tscn" id="5_evi0p"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_8ffim"]
 texture = ExtResource("1_vk57k")
@@ -30,3 +32,16 @@ tile_set = SubResource("TileSet_xfk5q")
 [node name="Camera2D" type="Camera2D" parent="." unique_id=178686319]
 
 [node name="Player" parent="." unique_id=928320247 instance=ExtResource("3_xfk5q")]
+
+[node name="Hunter" parent="." unique_id=117939896 instance=ExtResource("4_6444e")]
+
+[node name="Ork" parent="." unique_id=330933082 instance=ExtResource("5_evi0p")]
+
+[node name="Button" type="Button" parent="." unique_id=420426225]
+offset_left = -485.0
+offset_top = -251.0
+offset_right = -442.0
+offset_bottom = -220.0
+text = "shot"
+
+[connection signal="pressed" from="Button" to="." method="_on_button_pressed"]
