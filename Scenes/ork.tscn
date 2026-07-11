@@ -1,0 +1,21 @@
+[gd_scene format=3 uid="uid://b6ubgj5cmvsxa"]
+
+[ext_resource type="Texture2D" uid="uid://7lpja33lnc5u" path="res://Sprite/Ork.png" id="1_ta56k"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_j7iwy"]
+atlas = ExtResource("1_ta56k")
+region = Rect2(0, 0, 32, 32)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_yfjh5"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_j7iwy")
+}],
+"loop": true,
+"name": &"default",
+"speed": 5.0
+}]
+
+[node name="Ork" type="AnimatedSprite2D" unique_id=330933082]
+sprite_frames = SubResource("SpriteFrames_yfjh5")

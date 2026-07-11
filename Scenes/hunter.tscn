@@ -1,0 +1,21 @@
+[gd_scene format=3 uid="uid://du4kkj5qdtiyy"]
+
+[ext_resource type="Texture2D" uid="uid://bbpx26kpnoh75" path="res://Sprite/Hunter.png" id="1_kns4j"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_deo7t"]
+atlas = ExtResource("1_kns4j")
+region = Rect2(0, 0, 32, 32)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_4dcvi"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_deo7t")
+}],
+"loop": true,
+"name": &"default",
+"speed": 5.0
+}]
+
+[node name="Hunter" type="AnimatedSprite2D" unique_id=117939896]
+sprite_frames = SubResource("SpriteFrames_4dcvi")
