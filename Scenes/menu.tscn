@@ -1,0 +1,98 @@
+[gd_scene format=3 uid="uid://cn7sdihjnydft"]
+
+[ext_resource type="Theme" uid="uid://bgr5b6biwxpxr" path="res://Button.tres" id="1_1rerr"]
+[ext_resource type="Script" uid="uid://vcoumhw07eb8" path="res://Scenes/menu.gd" id="1_xhh6f"]
+
+[node name="Menu" type="Control" unique_id=161606]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_xhh6f")
+
+[node name="ColorRect" type="ColorRect" parent="." unique_id=2101557601]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -522.0
+offset_top = -257.0
+offset_right = 471.0
+offset_bottom = 277.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.6509804, 1, 1, 1)
+
+[node name="GridContainer" type="GridContainer" parent="." unique_id=700759839]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -154.0
+offset_top = -154.0
+offset_right = 154.0
+offset_bottom = 154.0
+grow_horizontal = 2
+grow_vertical = 2
+columns = 3
+
+[node name="Button" type="Button" parent="GridContainer" unique_id=393628537]
+custom_minimum_size = Vector2(100, 100)
+layout_mode = 2
+theme = ExtResource("1_1rerr")
+text = "1"
+
+[node name="Button2" type="Button" parent="GridContainer" unique_id=219997054]
+custom_minimum_size = Vector2(100, 100)
+layout_mode = 2
+theme = ExtResource("1_1rerr")
+text = "2"
+
+[node name="Button3" type="Button" parent="GridContainer" unique_id=709541854]
+custom_minimum_size = Vector2(100, 100)
+layout_mode = 2
+theme = ExtResource("1_1rerr")
+text = "3"
+
+[node name="Button4" type="Button" parent="GridContainer" unique_id=2100046985]
+custom_minimum_size = Vector2(100, 100)
+layout_mode = 2
+theme = ExtResource("1_1rerr")
+text = "4"
+
+[node name="Button5" type="Button" parent="GridContainer" unique_id=432529749]
+custom_minimum_size = Vector2(100, 100)
+layout_mode = 2
+theme = ExtResource("1_1rerr")
+text = "5"
+
+[node name="Button6" type="Button" parent="GridContainer" unique_id=1621667289]
+custom_minimum_size = Vector2(100, 100)
+layout_mode = 2
+theme = ExtResource("1_1rerr")
+text = "6"
+
+[node name="Button7" type="Button" parent="GridContainer" unique_id=1478205983]
+custom_minimum_size = Vector2(100, 100)
+layout_mode = 2
+theme = ExtResource("1_1rerr")
+text = "7"
+
+[node name="Button8" type="Button" parent="GridContainer" unique_id=1095762688]
+custom_minimum_size = Vector2(100, 100)
+layout_mode = 2
+theme = ExtResource("1_1rerr")
+text = "8"
+
+[node name="Button9" type="Button" parent="GridContainer" unique_id=107108147]
+custom_minimum_size = Vector2(100, 100)
+layout_mode = 2
+theme = ExtResource("1_1rerr")
+text = "9"
+
+[connection signal="pressed" from="GridContainer/Button" to="." method="_on_button_pressed"]
+[connection signal="pressed" from="GridContainer/Button2" to="." method="_on_button_2_pressed"]

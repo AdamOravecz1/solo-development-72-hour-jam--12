@@ -1,0 +1,56 @@
+[gd_resource type="Theme" format=3 uid="uid://bgr5b6biwxpxr"]
+
+[ext_resource type="FontFile" uid="uid://nymc51lh8atv" path="res://PixelOperator.ttf" id="1_crcjn"]
+[ext_resource type="Texture2D" uid="uid://b81qkovgm3mus" path="res://Sprite/Green_button.png" id="2_gxcar"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_nucju"]
+content_margin_left = 4.0
+content_margin_top = 4.0
+content_margin_right = 4.0
+content_margin_bottom = 4.0
+bg_color = Color(0.1, 0.1, 0.1, 0.3)
+corner_radius_top_left = 3
+corner_radius_top_right = 3
+corner_radius_bottom_right = 3
+corner_radius_bottom_left = 3
+corner_detail = 5
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_poym1"]
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_hdib3"]
+content_margin_left = 2.0
+content_margin_right = 2.0
+content_margin_bottom = 1.0
+texture = ExtResource("2_gxcar")
+region_rect = Rect2(78, 13, 100, 100)
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_qgca0"]
+content_margin_left = 2.0
+content_margin_top = 8.0
+content_margin_right = 2.0
+content_margin_bottom = 1.0
+texture = ExtResource("2_gxcar")
+region_rect = Rect2(77, 143, 100, 100)
+
+[resource]
+default_font = ExtResource("1_crcjn")
+Button/colors/font_color = Color(0.20784314, 0.78431374, 0.78431374, 1)
+Button/colors/font_disabled_color = Color(0.875, 0.875, 0.875, 0.5)
+Button/colors/font_focus_color = Color(0.95, 0.95, 0.95, 1)
+Button/colors/font_hover_color = Color(0.95, 0.95, 0.95, 1)
+Button/colors/font_hover_pressed_color = Color(1, 1, 1, 1)
+Button/colors/font_outline_color = Color(1, 1, 1, 1)
+Button/colors/font_pressed_color = Color(1, 1, 1, 1)
+Button/colors/icon_disabled_color = Color(1, 1, 1, 0.4)
+Button/colors/icon_focus_color = Color(1, 1, 1, 1)
+Button/colors/icon_hover_color = Color(1, 1, 1, 1)
+Button/colors/icon_hover_pressed_color = Color(1, 1, 1, 1)
+Button/colors/icon_normal_color = Color(1, 1, 1, 1)
+Button/colors/icon_pressed_color = Color(1, 1, 1, 1)
+Button/font_sizes/font_size = 32
+Button/fonts/font = ExtResource("1_crcjn")
+Button/styles/disabled = SubResource("StyleBoxFlat_nucju")
+Button/styles/focus = SubResource("StyleBoxEmpty_poym1")
+Button/styles/hover = SubResource("StyleBoxTexture_hdib3")
+Button/styles/normal = SubResource("StyleBoxTexture_hdib3")
+Button/styles/pressed = SubResource("StyleBoxTexture_qgca0")

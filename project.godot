@@ -11,9 +11,14 @@ config_version=5
 [application]
 
 config/name="SoloDevelopment 72-hour Jam #12"
-run/main_scene="res://Scenes/level_1.tscn"
+run/main_scene="uid://cn7sdihjnydft"
 config/features=PackedStringArray("4.6", "GL Compatibility")
 config/icon="res://icon.svg"
+
+[display]
+
+window/size/viewport_width=600
+window/size/viewport_height=600
 
 [input]
 

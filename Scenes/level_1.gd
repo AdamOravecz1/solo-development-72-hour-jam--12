@@ -43,7 +43,7 @@ var uplevel0 = [
 ]
 
 var downlevel1 = [
-	"XXXXXXXXXXXX",
+	"#XXXXXXXXXXX",
 	"XX000000000X",
 	"X0W00000000X",
 	"XX0X0000000X",
@@ -56,7 +56,7 @@ var downlevel1 = [
 ]
 
 var uplevel1 = [
-	"XXXXXXXXXXXX",
+	"#XXXXXXXXXXX",
 	"XX000000000X",
 	"XHW000000DUX",
 	"XXOX0000000X",
@@ -75,8 +75,8 @@ var downlevel = []
 var uplevel = []
 
 func _ready() -> void:
-	downlevel = levels[0][0]
-	uplevel = levels[0][1]
+	downlevel = levels[level][0]
+	uplevel = levels[level][1]
 	for i in downlevel.size():
 		for j in downlevel[i].length():
 			match downlevel[i][j]:
@@ -397,6 +397,9 @@ func undo_move() -> void:
 	# Clear out the physical nodes on screen to rebuild them instantly
 	# Clear TileMapLayer cells
 	buttom_layer.clear()
+	for y in range(-50, 50):
+		for x in range(-50, 50):
+			buttom_layer.set_cell(Vector2i(x, y), 0, Vector2i(0, 0))
 	
 # Clear old crossbow and box nodes
 	for child in get_children():
@@ -559,11 +562,15 @@ func fire_arrow_right() -> void:
 	arrow_flying = false
 
 func _on_button_pressed() -> void:
-	fire_arrow_right()
+	if not arrow_flying:
+		fire_arrow_right()
 	
 func clear_current_nodes() -> void:
 	# 1. Clear TileMapLayer cells
 	buttom_layer.clear()
+	for y in range(-50, 50):
+		for x in range(-50, 50):
+			buttom_layer.set_cell(Vector2i(x, y), 0, Vector2i(0, 0))
 	
 	# 2. Clear old spawned nodes (keeping persistent actors)
 	for child in get_children():
