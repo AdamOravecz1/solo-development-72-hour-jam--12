@@ -7,7 +7,7 @@ extends Node2D
 @onready var camera: Camera2D = $Camera2D 
 
 @onready var buttom_layer: TileMapLayer = $ButtomLayer
-@onready var player: Node2D = $Player
+@onready var player: AnimatedSprite2D = $Player
 @onready var hunter: AnimatedSprite2D = $Hunter
 @onready var ork: AnimatedSprite2D = $Ork
 
@@ -15,7 +15,7 @@ var level = 0
 
 const TILE_SIZE := 32
 const TILE_OFFSET := Vector2(16, 16)
-const MOVE_TIME := 0.15
+const MOVE_TIME := 0.3
 
 var moving := false
 var arrow_flying := false
@@ -306,56 +306,61 @@ func _process(_delta):
 
 	if Input.is_action_just_pressed("right"):
 		dir = Vector2i.RIGHT
+		player.play("default")
+		player.flip_h = false
 	elif Input.is_action_just_pressed("left"):
 		dir = Vector2i.LEFT
+		player.play("default")
+		player.flip_h = true
 	elif Input.is_action_just_pressed("down"):
 		dir = Vector2i.DOWN
+		player.play("down")
 	elif Input.is_action_just_pressed("up"):
 		dir = Vector2i.UP
+		player.play("up")
 
 	if dir != Vector2i.ZERO:
 		try_move(dir)
 
 
 func try_move(dir):
-	var old_board = uplevel.duplicate(true)
 	var target = player_grid_pos + dir
 
-	if target.y < 0 or target.y >= downlevel.size():
-		return
-	if target.x < 0 or target.x >= downlevel[target.y].length():
-		return
+	# Bounds safety checks
+	if target.y < 0 or target.y >= downlevel.size(): return
+	if target.x < 0 or target.x >= downlevel[target.y].length(): return
 		
 	var pieces_to_move = []
 	var target_positions = []
+	var move_type = "walk" # Default state
 		
 	match uplevel[target.y][target.x]:
 		"L", "R", "U", "D", "B":
-
 			var push_list = []
 			var check_tile = target
 
-			# Find all crossbows in a row
+			# Find all consecutive items in the push chain
 			while true:
 				var tile = uplevel[check_tile.y][check_tile.x]
-
 				if tile in ["L", "R", "U", "D", "B"]:
 					push_list.append(check_tile)
 					check_tile += dir
 				else:
 					break
 
-				# Out of bounds
-				if check_tile.y < 0 or check_tile.y >= uplevel.size():
-					return
-				if check_tile.x < 0 or check_tile.x >= uplevel[check_tile.y].length():
-					return
+				if check_tile.y < 0 or check_tile.y >= uplevel.size(): return
+				if check_tile.x < 0 or check_tile.x >= uplevel[check_tile.y].length(): return
 
-			# The tile after the last crossbow must be empty and walkable
+			# If the space behind the chain is blocked, it's an immovable wall/barrier scenario!
 			if uplevel[check_tile.y][check_tile.x] != "0" or downlevel[check_tile.y][check_tile.x] == "X" or downlevel[check_tile.y][check_tile.x] == "W":
+				# Play blocked/push wall animation in place without moving
+				await animate_blocked_push(dir)
 				return
+				
+			# If we successfully get here, the objects CAN move
+			move_type = "push"
 			save_state()
-			# COLLECT PIECES FOR ANIMATION BEFORE MOVING THEM IN DATA
+			
 			var p_piece = get_piece_at(player_grid_pos)
 			if p_piece:
 				pieces_to_move.append(p_piece)
@@ -367,23 +372,24 @@ func try_move(dir):
 					pieces_to_move.append(cross_piece)
 					target_positions.append(Vector2((pos + dir) * TILE_SIZE) + TILE_OFFSET)
 
-			# Move crossbows from back to front in the array
 			for i in range(push_list.size() - 1, -1, -1):
 				var from = push_list[i]
 				var to = from + dir
-
 				uplevel[to.y][to.x] = uplevel[from.y][from.x]
 				uplevel[from.y][from.x] = "0"
 
-			# Move player in the array
 			uplevel[player_grid_pos.y][player_grid_pos.x] = "0"
 			uplevel[target.y][target.x] = "P"
 			player_grid_pos = target
 
 		"0":
+			# If the upper layer is empty but the bottom floor tile is a wall or water
+			if downlevel[target.y][target.x] in ["X", "W"]:
+				await animate_blocked_push(dir)
+				return
+				
 			if downlevel[target.y][target.x] in ["0", "1", "2", "3", "4"]:
 				save_state()
-				# COLLECT PLAYER FOR ANIMATION
 				var p_piece = get_piece_at(player_grid_pos)
 				if p_piece:
 					pieces_to_move.append(p_piece)
@@ -393,14 +399,16 @@ func try_move(dir):
 				uplevel[target.y][target.x] = "P"
 				player_grid_pos = target
 				
+		_: # Catch-all for hitting things like H (Hunter) or O (Ork) directly
+			await animate_blocked_push(dir)
+			return
 		
 	var moved_board = uplevel.duplicate(true)
 
-	# rotate crossbows depending on floor tile
+	# (Keep your existing floor rotation loop intact right here...)
 	for y in uplevel.size():
 		for x in uplevel[y].length():
 			var tile = uplevel[y][x]
-
 			if tile in ["U", "D", "L", "R"]:
 				match downlevel[y][x]:
 					"1":
@@ -431,23 +439,34 @@ func try_move(dir):
 							"L": uplevel[y][x] = "U"
 						downlevel[y][x] = "0"
 						buttom_layer.set_cell(Vector2i(x, y), 0, Vector2i(0, 0))
-	
-	print()
-	for i in uplevel:
-		print(i)
 		
-	# Pass our pre-collected pieces straight to the animation function
 	if pieces_to_move.size() > 0:
-		await animate_board(pieces_to_move, target_positions)
+		# PASS THE MOVE TYPE HERE
+		await animate_board(pieces_to_move, target_positions, dir, move_type)
 
-	# Animate rotations after movement
 	if moved_board != uplevel:
 		await rotate_board(moved_board, uplevel)
 	
 
 		
-func animate_board(pieces_to_move: Array, target_positions: Array):
+func animate_board(pieces_to_move: Array, target_positions: Array, dir: Vector2i, move_type: String):
 	moving = true
+	
+	# Play standard walk vs push animation variations
+	if move_type == "push":
+		if dir == Vector2i.UP:
+			player.play("up_push")
+		elif dir == Vector2i.DOWN:
+			player.play("down_push")
+		else:
+			player.play("push")
+	else: # standard walk
+		if dir == Vector2i.UP:
+			player.play("up_walk")
+		elif dir == Vector2i.DOWN:
+			player.play("down_walk")
+		else:
+			player.play("walk")
 	
 	var tween = create_tween()
 	var tween_count = 0
@@ -467,6 +486,38 @@ func animate_board(pieces_to_move: Array, target_positions: Array):
 	if tween_count > 0:
 		await tween.finished
 
+	# Reset cleanly back to matching idle frames
+	if dir == Vector2i.UP:
+		player.play("up")
+	elif dir == Vector2i.DOWN:
+		player.play("down")
+	else:
+		player.play("default")
+
+	moving = false
+	
+func animate_blocked_push(dir: Vector2i) -> void:
+	moving = true
+	
+	# Play the push animation matching the bumped direction 
+	if dir == Vector2i.UP:
+		player.play("up_push")
+	elif dir == Vector2i.DOWN:
+		player.play("down_push")
+	else:
+		player.play("push")
+		
+	# Hold the push frame against the solid wall for the same movement time length
+	await get_tree().create_timer(MOVE_TIME).timeout
+	
+	# Return back to looking idle in that direction
+	if dir == Vector2i.UP:
+		player.play("up")
+	elif dir == Vector2i.DOWN:
+		player.play("down")
+	else:
+		player.play("default")
+		
 	moving = false
 	
 func rotate_board(old_board, new_board):
@@ -708,7 +759,7 @@ func fire_arrow_right() -> void:
 			# 1. Animate the arrow into the Ork's tile
 			var target_world_pos = Vector2(current_grid_pos * TILE_SIZE) + TILE_OFFSET
 			var tween = create_tween()
-			tween.tween_property(arrow_node, "position", target_world_pos, MOVE_TIME)
+			tween.tween_property(arrow_node, "position", target_world_pos, 0.15)
 			await tween.finished
 
 			# 2. Clear the Ork from the CURRENT level array first
@@ -742,7 +793,7 @@ func fire_arrow_right() -> void:
 			# Animate the arrow physically colliding with the crossbow first
 			var target_world_pos = Vector2(current_grid_pos * TILE_SIZE) + TILE_OFFSET
 			var tween = create_tween()
-			tween.tween_property(arrow_node, "position", target_world_pos, MOVE_TIME)
+			tween.tween_property(arrow_node, "position", target_world_pos, 0.15)
 			await tween.finished
 			
 			# "Deactivate" this crossbow by changing its data representation to lowercase
@@ -777,7 +828,7 @@ func fire_arrow_right() -> void:
 		if tile_upper == "0":
 			var target_world_pos = Vector2(current_grid_pos * TILE_SIZE) + TILE_OFFSET
 			var tween = create_tween()
-			tween.tween_property(arrow_node, "position", target_world_pos, MOVE_TIME)
+			tween.tween_property(arrow_node, "position", target_world_pos, 0.15)
 			await tween.finished
 
 		# Progress grid calculation along the current active direction
