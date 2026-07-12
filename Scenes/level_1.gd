@@ -68,7 +68,60 @@ var uplevel1 = [
 	"#XXXXXXXXXXX",
 ]
 
-var levels = [[downlevel0, uplevel0], [downlevel1, uplevel1]]
+var downlevel2 = [
+	"###XXX#",
+	"##XX0X#",
+	"##X0WX#",
+	"#X000X#",
+	"XXX00XX",
+	"X00000X",
+	"X00000X",
+	"X00000X",
+	"X00000X",
+	"XX000XX",
+	"#XXXXX#"
+]
+
+var uplevel2 = [
+	"###XXX#",
+	"##XXOX#",
+	"##X0WX#",
+	"#XHB0X#",
+	"XXX00XX",
+	"X0BBBBX",
+	"X00000X",
+	"XBB0BBX",
+	"X0UB00X",
+	"XX0P0XX",
+	"#XXXXX#"
+]
+
+var downlevel3 = [
+	"XXXXXXXXX",
+	"X0W00000X",
+	"XXXXXXX0X",
+	"X0X00000X",
+	"XWX00000X",
+	"X0X34000X",
+	"X0000004X",
+	"X000000XX",
+	"XXXXXXXX#"
+]
+
+var uplevel3 = [
+	"XXXXXXXXX",
+	"XHW0000DX",
+	"XXXXXXX0X",
+	"XOX00000X",
+	"XWXRD000X",
+	"X0X000DLX",
+	"X0D0U000X",
+	"X00P000XX",
+	"XXXXXXXX#"
+]
+
+
+var levels = [[downlevel0, uplevel0], [downlevel1, uplevel1], [downlevel2, uplevel2], [downlevel3, uplevel3]]
 
 var downlevel = []
 
@@ -90,6 +143,10 @@ func _ready() -> void:
 					create_rotater_r(j, i)
 				"2":
 					create_rotater_l(j, i)
+				"3": 
+					create_temporary_rotater_r(j, i)
+				"4": 
+					create_temporary_rotater_l(j, i)
 	for i in uplevel.size():
 		for j in uplevel[i].length():
 			match uplevel[i][j]:
@@ -199,7 +256,7 @@ func try_move(dir):
 			player_grid_pos = target
 
 		"0":
-			if downlevel[target.y][target.x] in ["0", "1", "2"]:
+			if downlevel[target.y][target.x] in ["0", "1", "2", "3", "4"]:
 				save_state()
 				# COLLECT PLAYER FOR ANIMATION
 				var p_piece = get_piece_at(player_grid_pos)
@@ -233,6 +290,22 @@ func try_move(dir):
 							"L": uplevel[y][x] = "D"
 							"D": uplevel[y][x] = "R"
 							"R": uplevel[y][x] = "U"
+					"3":
+						match tile:
+							"U": uplevel[y][x] = "L"
+							"L": uplevel[y][x] = "D"
+							"D": uplevel[y][x] = "R"
+							"R": uplevel[y][x] = "U"
+						downlevel[y][x] = "0"
+						buttom_layer.set_cell(Vector2i(x, y), 0, Vector2i(0, 0))
+					"4":
+						match tile:
+							"U": uplevel[y][x] = "R"
+							"R": uplevel[y][x] = "D"
+							"D": uplevel[y][x] = "L"
+							"L": uplevel[y][x] = "U"
+						downlevel[y][x] = "0"
+						buttom_layer.set_cell(Vector2i(x, y), 0, Vector2i(0, 0))
 	
 	print()
 	for i in uplevel:
@@ -336,6 +409,12 @@ func create_rotater_r(x: int, y: int) -> void:
 	
 func create_rotater_l(x: int, y: int) -> void:
 	buttom_layer.set_cell(Vector2i(x, y), 0, Vector2i(1, 1))
+	
+func create_temporary_rotater_r(x: int, y: int) -> void:
+	buttom_layer.set_cell(Vector2i(x, y), 0, Vector2i(1, 2))
+	
+func create_temporary_rotater_l(x: int, y: int) -> void:
+	buttom_layer.set_cell(Vector2i(x, y), 0, Vector2i(0, 3))
 
 func place_player(x: int, y: int) -> void:
 	player_grid_pos = Vector2i(x, y)
@@ -426,6 +505,8 @@ func rebuild_level_instantly() -> void:
 				"W": create_water(j, i)
 				"1": create_rotater_r(j, i)
 				"2": create_rotater_l(j, i)
+				"3": create_temporary_rotater_r(j, i)
+				"4": create_temporary_rotater_l(j, i)
 
 	# Rebuild top layer objects
 	for i in uplevel.size():

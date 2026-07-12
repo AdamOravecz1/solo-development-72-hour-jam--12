@@ -96,3 +96,10 @@ text = "9"
 
 [connection signal="pressed" from="GridContainer/Button" to="." method="_on_button_pressed"]
 [connection signal="pressed" from="GridContainer/Button2" to="." method="_on_button_2_pressed"]
+[connection signal="pressed" from="GridContainer/Button3" to="." method="_on_button_3_pressed"]
+[connection signal="pressed" from="GridContainer/Button4" to="." method="_on_button_4_pressed"]
+[connection signal="pressed" from="GridContainer/Button5" to="." method="_on_button_5_pressed"]
+[connection signal="pressed" from="GridContainer/Button6" to="." method="_on_button_6_pressed"]
+[connection signal="pressed" from="GridContainer/Button7" to="." method="_on_button_7_pressed"]
+[connection signal="pressed" from="GridContainer/Button8" to="." method="_on_button_8_pressed"]
+[connection signal="pressed" from="GridContainer/Button9" to="." method="_on_button_9_pressed"]
