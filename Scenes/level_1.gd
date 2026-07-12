@@ -120,8 +120,121 @@ var uplevel3 = [
 	"XXXXXXXX#"
 ]
 
+var downlevel4 = [
+	"##XXXXXXXX",
+	"##X0WW100X",
+	"XXXXXXWX0X",
+	"X002WW100X",
+	"X0XWXXXX0X",
+	"X001WW0X0X",
+	"X0XXXXXX0X",
+	"X00000000X",
+	"XXXXXXXXXX"
+]
 
-var levels = [[downlevel0, uplevel0], [downlevel1, uplevel1], [downlevel2, uplevel2], [downlevel3, uplevel3]]
+var uplevel4 = [
+	"##XXXXXXXX",
+	"##XHWW0L0X",
+	"XXXXXXWXPX",
+	"X0R0WW0L0X",
+	"X0XWXXXX0X",
+	"X0R0WWOX0X",
+	"X0XXXXXX0X",
+	"X00000000X",
+	"XXXXXXXXXX"
+]
+
+var downlevel5 = [
+	"##XX##",
+	"#X00XX",
+	"XX000X",
+	"X0030X",
+	"X0003X",
+	"#X000X",
+	"##XX0X",
+	"#X0W0X",
+	"#XXXWX",
+	"###X0X",
+	"###XXX"
+]
+
+var uplevel5 = [
+	"##XX##",
+	"#X00XX",
+	"XXPD0X",
+	"X0000X",
+	"X0BB0X",
+	"#X000X",
+	"##XX0X",
+	"#XHW0X",
+	"#XXXWX",
+	"###XOX",
+	"###XXX"
+]
+
+var downlevel6 = [
+	"XXXXXXXXXX",
+	"X0W000400X",
+	"XX0X00000X",
+	"#XWX00000X",
+	"#X0000000X",
+	"#XXXXXXXXX"
+]
+
+var uplevel6 = [
+	"XXXXXXXXXX",
+	"XHW00U0D0X",
+	"XXOX00LU0X",
+	"#XWX000BBX",
+	"#X00P0000X",
+	"#XXXXXXXXX"
+]
+
+var downlevel7 = [
+	"##XXXXXX",
+	"#XX0000X",
+	"#X00000X",
+	"XX00300X",
+	"X0W0030X",
+	"XX0X000X",
+	"#XXXXXXX"
+]
+
+var uplevel7 = [
+	"##XXXXXX",
+	"#XX0B0PX",
+	"#X0DLD0X",
+	"XX000B0X",
+	"XHW0000X",
+	"XXOX0B0X",
+	"#XXXXXXX"
+]
+
+var downlevel8 = [
+	"#XXXXXXX#",
+	"#X03W40X#",
+	"#X00X00X#",
+	"XX00X00XX",
+	"X0W0X0W0X",
+	"XX00400X#",
+	"#X00300X#",
+	"#X00000X#",
+	"#XXXXXXX#"
+]
+
+var uplevel8 = [
+	"#XXXXXXX#",
+	"#X00W00X#",
+	"#X0RXD0X#",
+	"XX00X00XX",
+	"XHW0X0WOX",
+	"XX0U0R0X#",
+	"#X00000X#",
+	"#X00P00X#",
+	"#XXXXXXX#"
+]
+
+var levels = [[downlevel0, uplevel0], [downlevel1, uplevel1], [downlevel2, uplevel2], [downlevel3, uplevel3], [downlevel4, uplevel4], [downlevel5, uplevel5], [downlevel6, uplevel6], [downlevel7, uplevel7], [downlevel8, uplevel8]]
 
 var downlevel = []
 
