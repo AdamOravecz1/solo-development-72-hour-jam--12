@@ -34,7 +34,7 @@ region_rect = Rect2(77, 143, 100, 100)
 
 [resource]
 default_font = ExtResource("1_crcjn")
-Button/colors/font_color = Color(0.20784314, 0.78431374, 0.78431374, 1)
+Button/colors/font_color = Color(0.7512831, 0.41465294, 0.09574061, 1)
 Button/colors/font_disabled_color = Color(0.875, 0.875, 0.875, 0.5)
 Button/colors/font_focus_color = Color(0.95, 0.95, 0.95, 1)
 Button/colors/font_hover_color = Color(0.95, 0.95, 0.95, 1)

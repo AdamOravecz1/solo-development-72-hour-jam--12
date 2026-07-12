@@ -36,19 +36,30 @@ tile_set = SubResource("TileSet_xfk5q")
 [node name="Camera2D" type="Camera2D" parent="." unique_id=178686319]
 position = Vector2(167, 136)
 
+[node name="Button" type="Button" parent="Camera2D" unique_id=420426225]
+custom_minimum_size = Vector2(100, 100)
+offset_left = -272.0
+offset_top = 173.0
+offset_right = -160.0
+offset_bottom = 273.0
+theme = ExtResource("7_lsmp6")
+text = "Shoot"
+
+[node name="Button2" type="Button" parent="Camera2D" unique_id=1816561615]
+custom_minimum_size = Vector2(100, 100)
+offset_left = -272.0
+offset_top = -264.0
+offset_right = -160.0
+offset_bottom = -164.0
+theme = ExtResource("7_lsmp6")
+text = "Level
+Select"
+
 [node name="Player" parent="." unique_id=928320247 instance=ExtResource("3_xfk5q")]
 
 [node name="Hunter" parent="." unique_id=117939896 instance=ExtResource("4_6444e")]
 
 [node name="Ork" parent="." unique_id=330933082 instance=ExtResource("5_evi0p")]
 
-[node name="Button" type="Button" parent="." unique_id=420426225]
-custom_minimum_size = Vector2(100, 100)
-offset_left = -105.0
-offset_top = 309.0
-offset_right = 7.0
-offset_bottom = 409.0
-theme = ExtResource("7_lsmp6")
-text = "shot"
-
-[connection signal="pressed" from="Button" to="." method="_on_button_pressed"]
+[connection signal="pressed" from="Camera2D/Button" to="." method="_on_button_pressed"]
+[connection signal="pressed" from="Camera2D/Button2" to="." method="_on_button_2_pressed"]

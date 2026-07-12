@@ -1,21 +1,44 @@
 [gd_scene format=3 uid="uid://dnw0u5p1n4n5s"]
 
 [ext_resource type="Texture2D" uid="uid://d0twcit2413ve" path="res://Sprite/Crossbow.png" id="1_mxam5"]
+[ext_resource type="Script" uid="uid://v1o2bxg72y6e" path="res://Scenes/crossbow.gd" id="2_1kmap"]
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_1kmap"]
+[sub_resource type="AtlasTexture" id="AtlasTexture_rseqn"]
 atlas = ExtResource("1_mxam5")
 region = Rect2(0, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_r4h3c"]
+atlas = ExtResource("1_mxam5")
+region = Rect2(32, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_co2o3"]
+atlas = ExtResource("1_mxam5")
+region = Rect2(0, 32, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_fvuyh"]
+atlas = ExtResource("1_mxam5")
+region = Rect2(32, 32, 32, 32)
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_rseqn"]
 animations = [{
 "frames": [{
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_1kmap")
+"texture": SubResource("AtlasTexture_rseqn")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_r4h3c")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_co2o3")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_fvuyh")
 }],
-"loop": true,
+"loop": false,
 "name": &"default",
-"speed": 5.0
+"speed": 10.0
 }]
 
 [node name="Crossbow" type="AnimatedSprite2D" unique_id=1346752499]
 sprite_frames = SubResource("SpriteFrames_rseqn")
+script = ExtResource("2_1kmap")

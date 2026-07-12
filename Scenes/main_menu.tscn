@@ -1,0 +1,45 @@
+[gd_scene format=3 uid="uid://bp4oxylsoj51w"]
+
+[ext_resource type="Theme" uid="uid://bgr5b6biwxpxr" path="res://Button.tres" id="1_28flt"]
+[ext_resource type="Script" uid="uid://bjjfc3gfxrt3u" path="res://Scenes/main_menu.gd" id="1_48xlc"]
+
+[node name="MainMenu" type="Control" unique_id=555381602]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_48xlc")
+
+[node name="ColorRect" type="ColorRect" parent="." unique_id=627846379]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -522.0
+offset_top = -257.0
+offset_right = 471.0
+offset_bottom = 277.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.6509804, 1, 1, 1)
+
+[node name="Button" type="Button" parent="." unique_id=1427997205]
+custom_minimum_size = Vector2(100, 100)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -68.0
+offset_top = -50.0
+offset_right = 68.0
+offset_bottom = 50.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("1_28flt")
+text = "Start"
+
+[connection signal="pressed" from="Button" to="." method="_on_button_pressed"]

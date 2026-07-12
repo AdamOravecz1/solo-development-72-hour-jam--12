@@ -4,6 +4,7 @@ extends Node2D
 @onready var arrow_scene = preload("res://Scenes/arrow.tscn")
 @onready var box_scene = preload("res://Scenes/box.tscn")
 
+@onready var camera: Camera2D = $Camera2D 
 
 @onready var buttom_layer: TileMapLayer = $ButtomLayer
 @onready var player: Node2D = $Player
@@ -241,8 +242,9 @@ var downlevel = []
 var uplevel = []
 
 func _ready() -> void:
-	downlevel = levels[level][0]
-	uplevel = levels[level][1]
+	downlevel = levels[level][0].duplicate(true)
+	uplevel = levels[level][1].duplicate(true)
+	center_camera_on_level()
 	for i in downlevel.size():
 		for j in downlevel[i].length():
 			match downlevel[i][j]:
@@ -288,6 +290,16 @@ func _process(_delta):
 	# Check for undo first
 	if Input.is_action_just_pressed("undo"):
 		undo_move()
+		return
+		
+	if Input.is_action_just_pressed("restart"):
+		$Hunter.play("default")
+		history = []
+		downlevel = levels[level][0].duplicate(true)
+		uplevel = levels[level][1].duplicate(true)
+		print("scevbu")
+		clear_current_nodes()
+		rebuild_level_instantly()
 		return
 
 	var dir := Vector2i.ZERO
@@ -503,6 +515,10 @@ func get_piece_at(grid_pos: Vector2i) -> Node2D:
 	var world_pos = Vector2(grid_pos * TILE_SIZE) + TILE_OFFSET
 
 	for child in get_children():
+		# IGNORE THE CAMERA, UI BUTTONS, AND THE TILEMAP LAYER
+		if child == camera or child == buttom_layer or child is Button:
+			continue
+			
 		if child is Node2D and child.position.distance_to(world_pos) < 0.1:
 			return child
 
@@ -649,6 +665,8 @@ func fire_arrow_right() -> void:
 	if hunter_pos == Vector2i(-1, -1):
 		print("No hunter found on the level!")
 		return
+		
+	get_piece_at(hunter_pos).play("fire")
 
 	# Lock the game state and save history for undoing
 	arrow_flying = true
@@ -683,24 +701,39 @@ func fire_arrow_right() -> void:
 			hit_something = true
 			break
 
-		# Check Ork Collision (Uplevel 'O')
+			# Check Ork Collision (Uplevel 'O')
 		if tile_upper == "O":
 			outcome = "win - Arrow hit the Ork!"
-			level += 1
-			downlevel = levels[level][0]
-			uplevel = levels[level][1]
-			history = []
-			clear_current_nodes()
-			
-			rebuild_level_instantly()
-			
-			uplevel[current_grid_pos.y][current_grid_pos.x] = "0"
-			hit_something = true
-			
+
+			# 1. Animate the arrow into the Ork's tile
 			var target_world_pos = Vector2(current_grid_pos * TILE_SIZE) + TILE_OFFSET
 			var tween = create_tween()
 			tween.tween_property(arrow_node, "position", target_world_pos, MOVE_TIME)
 			await tween.finished
+
+			# 2. Clear the Ork from the CURRENT level array first
+			arrow_node.queue_free()
+			uplevel[current_grid_pos.y][current_grid_pos.x] = "0"
+			get_piece_at(current_grid_pos).play("dead")
+			await get_piece_at(current_grid_pos).animation_finished
+			get_piece_at(current_grid_pos).play("default")
+
+			# 3. Now safely progress to the next level map
+			level += 1
+			if level == 9:
+				get_tree().change_scene_to_file("res://Scenes/finished_menu.tscn")
+				break
+			downlevel = levels[level][0].duplicate(true)
+			uplevel = levels[level][1].duplicate(true)
+			history = [] # Reset undo history for the clean stage
+
+			# 4. Wipe physical old nodes and draw the new layout
+			clear_current_nodes()
+			rebuild_level_instantly()
+			
+			center_camera_on_level()
+
+			hit_something = true
 			break
 			
 
@@ -716,6 +749,8 @@ func fire_arrow_right() -> void:
 			# This prevents it from being triggered a second time
 			var triggered_crossbow = tile_upper
 			uplevel[current_grid_pos.y][current_grid_pos.x] = triggered_crossbow.to_lower()
+			get_piece_at(current_grid_pos).play("default")
+			await get_tree().create_timer(.2).timeout
 
 			# Determine the new direction based on the crossbow type
 			match triggered_crossbow:
@@ -751,7 +786,8 @@ func fire_arrow_right() -> void:
 	# 4. Handle the resolution
 	print(outcome)
 	
-	arrow_node.queue_free()
+	if arrow_node:
+		arrow_node.queue_free()
 
 	arrow_flying = false
 
@@ -773,3 +809,25 @@ func clear_current_nodes() -> void:
 			if child.name.begins_with("crossbow") or "crossbow" in child.scene_file_path or \
 			   child.name.begins_with("box") or "box" in child.scene_file_path:
 				child.queue_free()
+				
+				
+
+
+func center_camera_on_level() -> void:
+	if uplevel.size() == 0:
+		return
+		
+	# Total height is the number of rows * TILE_SIZE
+	var map_height_pixels = uplevel.size() * TILE_SIZE
+	
+	# Total width is the number of characters in the first row * TILE_SIZE
+	var map_width_pixels = uplevel[0].length() * TILE_SIZE
+	
+	# The center position is exactly half of the total width and height
+	var center_pos = Vector2(map_width_pixels / 2.0, map_height_pixels / 2.0)
+	
+	camera.position = center_pos
+
+
+func _on_button_2_pressed() -> void:
+	get_tree().change_scene_to_file("res://Scenes/menu.tscn")
