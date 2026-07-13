@@ -2,6 +2,7 @@
 
 [ext_resource type="Theme" uid="uid://bgr5b6biwxpxr" path="res://Button.tres" id="1_1rerr"]
 [ext_resource type="Script" uid="uid://vcoumhw07eb8" path="res://Scenes/menu.gd" id="1_xhh6f"]
+[ext_resource type="AudioStream" uid="uid://di6orl82yia05" path="res://Sounds/universfield-click-button-140881.mp3" id="3_cayip"]
 
 [node name="Menu" type="Control" unique_id=161606]
 layout_mode = 3
@@ -94,12 +95,24 @@ layout_mode = 2
 theme = ExtResource("1_1rerr")
 text = "9"
 
+[node name="Press" type="AudioStreamPlayer" parent="." unique_id=636948563]
+stream = ExtResource("3_cayip")
+
+[connection signal="button_down" from="GridContainer/Button" to="." method="_on_button_button_down"]
 [connection signal="pressed" from="GridContainer/Button" to="." method="_on_button_pressed"]
+[connection signal="button_down" from="GridContainer/Button2" to="." method="_on_button_2_button_down"]
 [connection signal="pressed" from="GridContainer/Button2" to="." method="_on_button_2_pressed"]
+[connection signal="button_down" from="GridContainer/Button3" to="." method="_on_button_3_button_down"]
 [connection signal="pressed" from="GridContainer/Button3" to="." method="_on_button_3_pressed"]
+[connection signal="button_down" from="GridContainer/Button4" to="." method="_on_button_4_button_down"]
 [connection signal="pressed" from="GridContainer/Button4" to="." method="_on_button_4_pressed"]
+[connection signal="button_down" from="GridContainer/Button5" to="." method="_on_button_5_button_down"]
 [connection signal="pressed" from="GridContainer/Button5" to="." method="_on_button_5_pressed"]
+[connection signal="button_down" from="GridContainer/Button6" to="." method="_on_button_6_button_down"]
 [connection signal="pressed" from="GridContainer/Button6" to="." method="_on_button_6_pressed"]
+[connection signal="button_down" from="GridContainer/Button7" to="." method="_on_button_7_button_down"]
 [connection signal="pressed" from="GridContainer/Button7" to="." method="_on_button_7_pressed"]
+[connection signal="button_down" from="GridContainer/Button8" to="." method="_on_button_8_button_down"]
 [connection signal="pressed" from="GridContainer/Button8" to="." method="_on_button_8_pressed"]
+[connection signal="button_down" from="GridContainer/Button9" to="." method="_on_button_9_button_down"]
 [connection signal="pressed" from="GridContainer/Button9" to="." method="_on_button_9_pressed"]

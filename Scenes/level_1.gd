@@ -320,6 +320,8 @@ func _process(_delta):
 		player.play("up")
 
 	if dir != Vector2i.ZERO:
+		$Sounds/Walk.pitch_scale = randf_range(.8, 1.2)
+		$Sounds/Walk.play()
 		try_move(dir)
 
 
@@ -755,6 +757,7 @@ func fire_arrow_right() -> void:
 			# Check Ork Collision (Uplevel 'O')
 		if tile_upper == "O":
 			outcome = "win - Arrow hit the Ork!"
+			$Sounds/Death.play()
 
 			# 1. Animate the arrow into the Ork's tile
 			var target_world_pos = Vector2(current_grid_pos * TILE_SIZE) + TILE_OFFSET
@@ -768,6 +771,7 @@ func fire_arrow_right() -> void:
 			get_piece_at(current_grid_pos).play("dead")
 			await get_piece_at(current_grid_pos).animation_finished
 			get_piece_at(current_grid_pos).play("default")
+			$Hunter.play("default")
 
 			# 3. Now safely progress to the next level map
 			level += 1
@@ -790,6 +794,7 @@ func fire_arrow_right() -> void:
 
 		# Check Crossbow Collision (Chain Reaction!)
 		if tile_upper in ["L", "R", "U", "D"]:
+			$Sounds/CrossBow.play()
 			# Animate the arrow physically colliding with the crossbow first
 			var target_world_pos = Vector2(current_grid_pos * TILE_SIZE) + TILE_OFFSET
 			var tween = create_tween()
@@ -844,6 +849,8 @@ func fire_arrow_right() -> void:
 
 func _on_button_pressed() -> void:
 	if not arrow_flying:
+		$Sounds/Press.play()
+		$Sounds/Bow.play()
 		fire_arrow_right()
 	
 func clear_current_nodes() -> void:
@@ -881,4 +888,9 @@ func center_camera_on_level() -> void:
 
 
 func _on_button_2_pressed() -> void:
+	
 	get_tree().change_scene_to_file("res://Scenes/menu.tscn")
+
+
+func _on_button_2_button_down() -> void:
+	$Sounds/Press.play()

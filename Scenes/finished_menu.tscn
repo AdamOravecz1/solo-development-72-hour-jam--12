@@ -3,6 +3,7 @@
 [ext_resource type="Script" uid="uid://buaso0a21yaa7" path="res://Scenes/finished_menu.gd" id="1_gajpk"]
 [ext_resource type="Theme" uid="uid://bgr5b6biwxpxr" path="res://Button.tres" id="2_gajpk"]
 [ext_resource type="FontFile" uid="uid://b37y1stm7l87l" path="res://PixelOperator.ttf" id="3_34doi"]
+[ext_resource type="AudioStream" uid="uid://di6orl82yia05" path="res://Sounds/universfield-click-button-140881.mp3" id="4_34doi"]
 
 [node name="FinishedMenu" type="Control" unique_id=370024934]
 layout_mode = 3
@@ -64,4 +65,8 @@ text = "Congratulation!
 You beat the game"
 horizontal_alignment = 1
 
+[node name="Press" type="AudioStreamPlayer" parent="." unique_id=503963985]
+stream = ExtResource("4_34doi")
+
+[connection signal="button_down" from="Button" to="." method="_on_button_button_down"]
 [connection signal="pressed" from="Button" to="." method="_on_button_pressed"]

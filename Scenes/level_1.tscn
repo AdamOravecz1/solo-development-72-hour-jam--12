@@ -6,6 +6,11 @@
 [ext_resource type="PackedScene" uid="uid://du4kkj5qdtiyy" path="res://Scenes/hunter.tscn" id="4_6444e"]
 [ext_resource type="PackedScene" uid="uid://b6ubgj5cmvsxa" path="res://Scenes/ork.tscn" id="5_evi0p"]
 [ext_resource type="Theme" uid="uid://bgr5b6biwxpxr" path="res://Button.tres" id="7_lsmp6"]
+[ext_resource type="AudioStream" uid="uid://bdq2itx3di8bo" path="res://Sounds/joentnt-walk-on-grass-3-291986.mp3" id="7_xrdnt"]
+[ext_resource type="AudioStream" uid="uid://d0ujllpcfj6qm" path="res://Sounds/imagne_impossible-weapon-arrow-shot-01-153370.mp3" id="8_chwpn"]
+[ext_resource type="AudioStream" uid="uid://vxuxe8lh3rjn" path="res://Sounds/freesound_community-crossbow-firing-95020.mp3" id="9_af3po"]
+[ext_resource type="AudioStream" uid="uid://d0y1b5c01p5a2" path="res://Sounds/universfield-dramatic-death-collapse-352720.mp3" id="10_uy8f0"]
+[ext_resource type="AudioStream" uid="uid://di6orl82yia05" path="res://Sounds/universfield-click-button-140881.mp3" id="11_af3po"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_8ffim"]
 texture = ExtResource("1_vk57k")
@@ -19,6 +24,23 @@ use_texture_padding = false
 1:2/0 = 0
 0:3/0 = 0
 1:3/0 = 0
+2:0/0 = 0
+2:1/0 = 0
+2:2/0 = 0
+3:1/0 = 0
+3:0/0 = 0
+3:2/0 = 0
+4:2/0 = 0
+4:1/0 = 0
+4:0/0 = 0
+4:3/0 = 0
+3:3/0 = 0
+2:3/0 = 0
+0:4/0 = 0
+1:4/0 = 0
+2:4/0 = 0
+3:4/0 = 0
+4:4/0 = 0
 
 [sub_resource type="TileSet" id="TileSet_xfk5q"]
 tile_size = Vector2i(32, 32)
@@ -43,7 +65,7 @@ offset_top = 173.0
 offset_right = -160.0
 offset_bottom = 273.0
 theme = ExtResource("7_lsmp6")
-text = "Shoot"
+text = "Fire"
 
 [node name="Button2" type="Button" parent="Camera2D" unique_id=1816561615]
 custom_minimum_size = Vector2(100, 100)
@@ -61,5 +83,28 @@ Select"
 
 [node name="Ork" parent="." unique_id=330933082 instance=ExtResource("5_evi0p")]
 
+[node name="Sounds" type="Control" parent="." unique_id=1882548892]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="Walk" type="AudioStreamPlayer" parent="Sounds" unique_id=1331403680]
+stream = ExtResource("7_xrdnt")
+
+[node name="Bow" type="AudioStreamPlayer" parent="Sounds" unique_id=1127891995]
+stream = ExtResource("8_chwpn")
+
+[node name="CrossBow" type="AudioStreamPlayer" parent="Sounds" unique_id=586824718]
+stream = ExtResource("9_af3po")
+volume_db = -10.0
+
+[node name="Death" type="AudioStreamPlayer" parent="Sounds" unique_id=529568525]
+stream = ExtResource("10_uy8f0")
+
+[node name="Press" type="AudioStreamPlayer" parent="Sounds" unique_id=1490983697]
+stream = ExtResource("11_af3po")
+
 [connection signal="pressed" from="Camera2D/Button" to="." method="_on_button_pressed"]
+[connection signal="button_down" from="Camera2D/Button2" to="." method="_on_button_2_button_down"]
 [connection signal="pressed" from="Camera2D/Button2" to="." method="_on_button_2_pressed"]

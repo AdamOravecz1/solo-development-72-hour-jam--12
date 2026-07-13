@@ -2,6 +2,7 @@
 
 [ext_resource type="Theme" uid="uid://bgr5b6biwxpxr" path="res://Button.tres" id="1_28flt"]
 [ext_resource type="Script" uid="uid://bjjfc3gfxrt3u" path="res://Scenes/main_menu.gd" id="1_48xlc"]
+[ext_resource type="AudioStream" uid="uid://di6orl82yia05" path="res://Sounds/universfield-click-button-140881.mp3" id="3_1ehe0"]
 
 [node name="MainMenu" type="Control" unique_id=555381602]
 layout_mode = 3
@@ -42,4 +43,8 @@ grow_vertical = 2
 theme = ExtResource("1_28flt")
 text = "Start"
 
+[node name="Press" type="AudioStreamPlayer" parent="." unique_id=940948109]
+stream = ExtResource("3_1ehe0")
+
+[connection signal="button_down" from="Button" to="." method="_on_button_button_down"]
 [connection signal="pressed" from="Button" to="." method="_on_button_pressed"]

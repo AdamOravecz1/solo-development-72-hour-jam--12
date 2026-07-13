@@ -49,3 +49,39 @@ func _on_button_8_pressed() -> void:
 
 func _on_button_9_pressed() -> void:
 	choose_level(8)
+
+
+func _on_button_button_down() -> void:
+	$Press.play()
+
+
+func _on_button_2_button_down() -> void:
+	$Press.play()
+
+
+func _on_button_3_button_down() -> void:
+	$Press.play()
+
+
+func _on_button_4_button_down() -> void:
+	$Press.play()
+
+
+func _on_button_5_button_down() -> void:
+	$Press.play()
+
+
+func _on_button_6_button_down() -> void:
+	$Press.play()
+
+
+func _on_button_7_button_down() -> void:
+	$Press.play()
+
+
+func _on_button_8_button_down() -> void:
+	$Press.play()
+
+
+func _on_button_9_button_down() -> void:
+	$Press.play()
