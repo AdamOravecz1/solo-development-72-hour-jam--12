@@ -13,7 +13,7 @@ config_version=5
 config/name="SoloDevelopment 72-hour Jam #12"
 run/main_scene="uid://bp4oxylsoj51w"
 config/features=PackedStringArray("4.6", "GL Compatibility")
-config/icon="res://icon.svg"
+config/icon="uid://wklme35220ut"
 
 [autoload]
 

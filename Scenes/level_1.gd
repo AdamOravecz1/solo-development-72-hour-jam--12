@@ -17,6 +17,44 @@ const TILE_SIZE := 32
 const TILE_OFFSET := Vector2(16, 16)
 const MOVE_TIME := 0.3
 
+const WALL_TILES := {
+	0:  Vector2i(5, 3),  # Completely isolated wall block
+	1:  Vector2i(0, 5),  # Wall ONLY above it
+	2:  Vector2i(2, 3),  # Wall ONLY to its right
+	3:  Vector2i(0, 2),  # Walls above and right (Corner)
+	4:  Vector2i(0, 3),  # Wall ONLY below it
+	5:  Vector2i(0, 4),  # Walls above and below (Vertical line)
+	6:  Vector2i(0, 0),  # Walls below and right (Corner)
+	7:  Vector2i(0, 1),  # Walls above, below, and right (T-junction)
+	8:  Vector2i(4, 3),  # Wall ONLY to its left
+	9:  Vector2i(2, 2),  # Walls above and left (Corner)
+	10: Vector2i(3, 3),  # Walls left and right (Horizontal line)
+	11: Vector2i(1, 2),  # Walls above, left, and right (T-junction)
+	12: Vector2i(2, 0),  # Walls below and left (Corner)
+	13: Vector2i(2, 1),  # Walls above, below, and left (T-junction)
+	14: Vector2i(1, 0),  # Walls below, left, and right (T-junction)
+	15: Vector2i(1, 1)   # Surrounded by walls on all 4 sides (Cross)
+}
+
+const WATER_TILES := {
+	0:  Vector2i(5, 4),  # Completely isolated water block
+	1:  Vector2i(1, 5),  # Water ONLY above it
+	2:  Vector2i(2, 4),  # Water ONLY to its right
+	3:  Vector2i(3, 2),  # Waters above and right (Corner)
+	4:  Vector2i(1, 3),  # Water ONLY below it
+	5:  Vector2i(1, 4),  # Waters above and below (Vertical line)
+	6:  Vector2i(3, 0),  # Waters below and right (Corner)
+	7:  Vector2i(3, 1),  # Waters above, below, and right (T-junction)
+	8:  Vector2i(4, 4),  # Water ONLY to its left
+	9:  Vector2i(5, 2),  # Waters above and left (Corner)
+	10: Vector2i(3, 4),  # Waters left and right (Horizontal line)
+	11: Vector2i(4, 2),  # Waters above, left, and right (T-junction)
+	12: Vector2i(5, 0),  # Waters below and left (Corner)
+	13: Vector2i(5, 1),  # Waters above, below, and left (T-junction)
+	14: Vector2i(4, 0),  # Waters below, left, and right (T-junction)
+	15: Vector2i(4, 1)   # Surrounded by waters on all 4 sides (Cross)
+}
+
 var moving := false
 var arrow_flying := false
 var player_grid_pos = Vector2i.ZERO
@@ -72,7 +110,7 @@ var uplevel1 = [
 var downlevel2 = [
 	"###XXX#",
 	"##XX0X#",
-	"##X0WX#",
+	"#XX0WX#",
 	"#X000X#",
 	"XXX00XX",
 	"X00000X",
@@ -86,7 +124,7 @@ var downlevel2 = [
 var uplevel2 = [
 	"###XXX#",
 	"##XXOX#",
-	"##X0WX#",
+	"#XX0WX#",
 	"#XHB0X#",
 	"XXX00XX",
 	"X0BBBBX",
@@ -146,13 +184,13 @@ var uplevel4 = [
 ]
 
 var downlevel5 = [
-	"##XX##",
+	"#XXXX#",
 	"#X00XX",
 	"XX000X",
 	"X0030X",
 	"X0003X",
-	"#X000X",
-	"##XX0X",
+	"XX000X",
+	"#XXX0X",
 	"#X0W0X",
 	"#XXXWX",
 	"###X0X",
@@ -160,13 +198,13 @@ var downlevel5 = [
 ]
 
 var uplevel5 = [
-	"##XX##",
+	"#XXXX#",
 	"#X00XX",
 	"XXPD0X",
 	"X0000X",
 	"X0BB0X",
-	"#X000X",
-	"##XX0X",
+	"XX000X",
+	"#XXX0X",
 	"#XHW0X",
 	"#XXXWX",
 	"###XOX",
@@ -217,7 +255,7 @@ var downlevel8 = [
 	"#X00X00X#",
 	"XX00X00XX",
 	"X0W0X0W0X",
-	"XX00400X#",
+	"XX00400XX",
 	"#X00300X#",
 	"#X00000X#",
 	"#XXXXXXX#"
@@ -229,7 +267,7 @@ var uplevel8 = [
 	"#X0RXD0X#",
 	"XX00X00XX",
 	"XHW0X0WOX",
-	"XX0U0R0X#",
+	"XX0U0R0XX",
 	"#X00000X#",
 	"#X00P00X#",
 	"#XXXXXXX#"
@@ -334,7 +372,7 @@ func try_move(dir):
 		
 	var pieces_to_move = []
 	var target_positions = []
-	var move_type = "walk" # Default state
+	var move_type = "walk" 
 		
 	match uplevel[target.y][target.x]:
 		"L", "R", "U", "D", "B":
@@ -353,13 +391,13 @@ func try_move(dir):
 				if check_tile.y < 0 or check_tile.y >= uplevel.size(): return
 				if check_tile.x < 0 or check_tile.x >= uplevel[check_tile.y].length(): return
 
-			# If the space behind the chain is blocked, it's an immovable wall/barrier scenario!
+			# BLOCKED CHAIN: Play push animation, spin rotators, then exit
 			if uplevel[check_tile.y][check_tile.x] != "0" or downlevel[check_tile.y][check_tile.x] == "X" or downlevel[check_tile.y][check_tile.x] == "W":
-				# Play blocked/push wall animation in place without moving
 				await animate_blocked_push(dir)
+				await process_floor_rotators() # Spin tiles anyway!
 				return
 				
-			# If we successfully get here, the objects CAN move
+			# SUCCESSFUL PUSH
 			move_type = "push"
 			save_state()
 			
@@ -385,11 +423,13 @@ func try_move(dir):
 			player_grid_pos = target
 
 		"0":
-			# If the upper layer is empty but the bottom floor tile is a wall or water
+			# BLOCKED WALL/WATER: Play push animation, spin rotators, then exit
 			if downlevel[target.y][target.x] in ["X", "W"]:
 				await animate_blocked_push(dir)
+				await process_floor_rotators() # Spin tiles anyway!
 				return
 				
+			# SUCCESSFUL WALK
 			if downlevel[target.y][target.x] in ["0", "1", "2", "3", "4"]:
 				save_state()
 				var p_piece = get_piece_at(player_grid_pos)
@@ -401,13 +441,21 @@ func try_move(dir):
 				uplevel[target.y][target.x] = "P"
 				player_grid_pos = target
 				
-		_: # Catch-all for hitting things like H (Hunter) or O (Ork) directly
+		_: # BLOCKED BY ACTOR: Play push animation, spin rotators, then exit
 			await animate_blocked_push(dir)
+			await process_floor_rotators() # Spin tiles anyway!
 			return
 		
+	# Run animations for successful movements
+	if pieces_to_move.size() > 0:
+		await animate_board(pieces_to_move, target_positions, dir, move_type)
+
+	# Run floor rotations for successful movements
+	await process_floor_rotators()
+	
+func process_floor_rotators() -> void:
 	var moved_board = uplevel.duplicate(true)
 
-	# (Keep your existing floor rotation loop intact right here...)
 	for y in uplevel.size():
 		for x in uplevel[y].length():
 			var tile = uplevel[y][x]
@@ -432,7 +480,7 @@ func try_move(dir):
 							"D": uplevel[y][x] = "R"
 							"R": uplevel[y][x] = "U"
 						downlevel[y][x] = "0"
-						buttom_layer.set_cell(Vector2i(x, y), 0, Vector2i(0, 0))
+						buttom_layer.set_cell(Vector2i(x, y), 0, Vector2i(2, 5))
 					"4":
 						match tile:
 							"U": uplevel[y][x] = "R"
@@ -440,16 +488,11 @@ func try_move(dir):
 							"D": uplevel[y][x] = "L"
 							"L": uplevel[y][x] = "U"
 						downlevel[y][x] = "0"
-						buttom_layer.set_cell(Vector2i(x, y), 0, Vector2i(0, 0))
-		
-	if pieces_to_move.size() > 0:
-		# PASS THE MOVE TYPE HERE
-		await animate_board(pieces_to_move, target_positions, dir, move_type)
+						buttom_layer.set_cell(Vector2i(x, y), 0, Vector2i(2, 5))
 
+	# If anything changed direction, trigger the visual rotations!
 	if moved_board != uplevel:
 		await rotate_board(moved_board, uplevel)
-	
-
 		
 func animate_board(pieces_to_move: Array, target_positions: Array, dir: Vector2i, move_type: String):
 	moving = true
@@ -495,6 +538,16 @@ func animate_board(pieces_to_move: Array, target_positions: Array, dir: Vector2i
 		player.play("down")
 	else:
 		player.play("default")
+# Reset cleanly back to matching idle frames
+	if dir == Vector2i.UP:
+		player.play("up")
+	elif dir == Vector2i.DOWN:
+		player.play("down")
+	else:
+		player.play("default")
+
+	# NEW: Force synchronization with the Ork immediately
+	sync_player_animation_with_ork()
 
 	moving = false
 	
@@ -519,6 +572,16 @@ func animate_blocked_push(dir: Vector2i) -> void:
 		player.play("down")
 	else:
 		player.play("default")
+# Return back to looking idle in that direction
+	if dir == Vector2i.UP:
+		player.play("up")
+	elif dir == Vector2i.DOWN:
+		player.play("down")
+	else:
+		player.play("default")
+		
+	# NEW: Force synchronization with the Ork immediately
+	sync_player_animation_with_ork()
 		
 	moving = false
 	
@@ -578,25 +641,69 @@ func get_piece_at(grid_pos: Vector2i) -> Node2D:
 	return null
 	
 func create_grass(x: int, y: int) -> void:
-	buttom_layer.set_cell(Vector2i(x, y), 0, Vector2i(0, 0))
+	buttom_layer.set_cell(Vector2i(x, y), 0, Vector2i(2, 5))
 
 func create_wall(x: int, y: int) -> void:
-	buttom_layer.set_cell(Vector2i(x, y), 0, Vector2i(0, 1))
+	var score = 0
+	
+	# Check Up (y - 1)
+	if y > 0 and downlevel[y - 1][x] == "X":
+		score += 1
+		
+	# Check Right (x + 1)
+	if x < downlevel[y].length() - 1 and downlevel[y][x + 1] == "X":
+		score += 2
+		
+	# Check Down (y + 1)
+	if y < downlevel.size() - 1 and downlevel[y + 1][x] == "X":
+		score += 4
+		
+	# Check Left (x - 1)
+	if x > 0 and downlevel[y][x - 1] == "X":
+		score += 8
+
+	# Pull the correct atlas coordinate using our calculated score
+	var tile_atlas_coords = WALL_TILES.get(score, Vector2i(0, 1)) # Defaults to isolated wall if missing
+
+	# Place it on your TileMapLayer
+	buttom_layer.set_cell(Vector2i(x, y), 0, tile_atlas_coords)
 	
 func create_water(x: int, y: int) -> void:
-	buttom_layer.set_cell(Vector2i(x, y), 0, Vector2i(1, 0))
+	var score = 0
+	
+	# Check Up (y - 1)
+	if y > 0 and downlevel[y - 1][x] == "W":
+		score += 1
+		
+	# Check Right (x + 1)
+	if x < downlevel[y].length() - 1 and downlevel[y][x + 1] == "W":
+		score += 2
+		
+	# Check Down (y + 1)
+	if y < downlevel.size() - 1 and downlevel[y + 1][x] == "W":
+		score += 4
+		
+	# Check Left (x - 1)
+	if x > 0 and downlevel[y][x - 1] == "W":
+		score += 8
+
+	# Pull the correct atlas coordinate using our calculated score
+	var tile_atlas_coords = WATER_TILES.get(score, Vector2i(0, 1)) # Defaults to isolated wall if missing
+
+	# Place it on your TileMapLayer
+	buttom_layer.set_cell(Vector2i(x, y), 0, tile_atlas_coords)
 	
 func create_rotater_r(x: int, y: int) -> void:
-	buttom_layer.set_cell(Vector2i(x, y), 0, Vector2i(0, 2))
+	buttom_layer.set_cell(Vector2i(x, y), 0, Vector2i(0, 6))
 	
 func create_rotater_l(x: int, y: int) -> void:
-	buttom_layer.set_cell(Vector2i(x, y), 0, Vector2i(1, 1))
+	buttom_layer.set_cell(Vector2i(x, y), 0, Vector2i(1, 6))
 	
 func create_temporary_rotater_r(x: int, y: int) -> void:
-	buttom_layer.set_cell(Vector2i(x, y), 0, Vector2i(1, 2))
+	buttom_layer.set_cell(Vector2i(x, y), 0, Vector2i(2, 6))
 	
 func create_temporary_rotater_l(x: int, y: int) -> void:
-	buttom_layer.set_cell(Vector2i(x, y), 0, Vector2i(0, 3))
+	buttom_layer.set_cell(Vector2i(x, y), 0, Vector2i(3, 6))
 
 func place_player(x: int, y: int) -> void:
 	player_grid_pos = Vector2i(x, y)
@@ -660,7 +767,7 @@ func undo_move() -> void:
 	buttom_layer.clear()
 	for y in range(-50, 50):
 		for x in range(-50, 50):
-			buttom_layer.set_cell(Vector2i(x, y), 0, Vector2i(0, 0))
+			buttom_layer.set_cell(Vector2i(x, y), 0, Vector2i(2, 5))
 	
 # Clear old crossbow and box nodes
 	for child in get_children():
@@ -858,7 +965,7 @@ func clear_current_nodes() -> void:
 	buttom_layer.clear()
 	for y in range(-50, 50):
 		for x in range(-50, 50):
-			buttom_layer.set_cell(Vector2i(x, y), 0, Vector2i(0, 0))
+			buttom_layer.set_cell(Vector2i(x, y), 0, Vector2i(2, 5))
 	
 	# 2. Clear old spawned nodes (keeping persistent actors)
 	for child in get_children():
@@ -894,3 +1001,10 @@ func _on_button_2_pressed() -> void:
 
 func _on_button_2_button_down() -> void:
 	$Sounds/Press.play()
+
+func sync_player_animation_with_ork() -> void:
+	if player and ork:
+		# Match the current animation frame number
+		player.frame = ork.frame
+		# Match the exact sub-frame interpolation progress
+		player.frame_progress = ork.frame_progress

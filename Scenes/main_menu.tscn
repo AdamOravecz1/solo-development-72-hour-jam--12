@@ -3,6 +3,7 @@
 [ext_resource type="Theme" uid="uid://bgr5b6biwxpxr" path="res://Button.tres" id="1_28flt"]
 [ext_resource type="Script" uid="uid://bjjfc3gfxrt3u" path="res://Scenes/main_menu.gd" id="1_48xlc"]
 [ext_resource type="AudioStream" uid="uid://di6orl82yia05" path="res://Sounds/universfield-click-button-140881.mp3" id="3_1ehe0"]
+[ext_resource type="FontFile" uid="uid://b37y1stm7l87l" path="res://PixelOperator.ttf" id="4_ce3w2"]
 
 [node name="MainMenu" type="Control" unique_id=555381602]
 layout_mode = 3
@@ -18,10 +19,10 @@ layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = -522.0
-offset_top = -257.0
-offset_right = 471.0
-offset_bottom = 277.0
+offset_left = -82.0
+offset_top = -153.0
+offset_right = 911.0
+offset_bottom = 381.0
 grow_horizontal = 2
 grow_vertical = 2
 color = Color(0.6509804, 1, 1, 1)
@@ -45,6 +46,26 @@ text = "Start"
 
 [node name="Press" type="AudioStreamPlayer" parent="." unique_id=940948109]
 stream = ExtResource("3_1ehe0")
+
+[node name="Label" type="Label" parent="." unique_id=874378122]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -152.0
+offset_top = -191.0
+offset_right = 152.0
+offset_bottom = -159.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(0.7529412, 0.41568628, 0.09411765, 1)
+theme_override_fonts/font = ExtResource("4_ce3w2")
+theme_override_font_sizes/font_size = 32
+text = "Ork Hunting
+(with extra steps)"
+horizontal_alignment = 1
 
 [connection signal="button_down" from="Button" to="." method="_on_button_button_down"]
 [connection signal="pressed" from="Button" to="." method="_on_button_pressed"]
