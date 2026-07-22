@@ -694,10 +694,10 @@ func create_water(x: int, y: int) -> void:
 	buttom_layer.set_cell(Vector2i(x, y), 0, tile_atlas_coords)
 	
 func create_rotater_r(x: int, y: int) -> void:
-	buttom_layer.set_cell(Vector2i(x, y), 0, Vector2i(0, 6))
+	buttom_layer.set_cell(Vector2i(x, y), 0, Vector2i(1, 6))
 	
 func create_rotater_l(x: int, y: int) -> void:
-	buttom_layer.set_cell(Vector2i(x, y), 0, Vector2i(1, 6))
+	buttom_layer.set_cell(Vector2i(x, y), 0, Vector2i(0, 6))
 	
 func create_temporary_rotater_r(x: int, y: int) -> void:
 	buttom_layer.set_cell(Vector2i(x, y), 0, Vector2i(2, 6))
